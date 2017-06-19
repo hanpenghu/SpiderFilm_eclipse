@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 				
+      xmlns="http://www.springframework.org/schema/beans"				
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"				
+	  xmlns:mvc="http://www.springframework.org/schema/mvc"			
+	  xmlns:context="http://www.springframework.org/schema/context"			
+      xsi:schemaLocation="				
+      http://www.springframework.org/schema/context				
+      http://www.springframework.org/schema/context/spring-context-3.0.xsd				
+	  http://www.springframework.org/schema/beans 			
+	  http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 			
+      http://www.springframework.org/schema/mvc				
+      http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">				
+  		<!-- 注册Action控制器,让springIOC容器在启动的时候去找带@Controller的类,注意:导入的是类所在的包而并不是类 -->
+		<!-- 注意controller层只能在springMVC.xml中扫描才有效 -->
+		<mvc:annotation-driven></mvc:annotation-driven> <!-- 扫描开启,并且有静态资源的时候必须有这个才不会影响restful资源 -->
+		<context:component-scan base-package="com.you_fuli.spiderFilm.controller"/>
+		<!-- json转换器 ,因为使用注解,所以不用转换器-->
+<!-- <bean id="jsonConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+ <property name="supportedMediaTypes" value="application/json" />
+</bean>	 -->	
+  		<!-- 映射器 跟以前不用注解的时候不一样了,可以省略-->		
+  		<!-- <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>	 -->	
+  		<!-- 适配器 跟以前不用注解的时候不一样了,可省略-->		
+  		<!-- <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>	 -->	
+  		<!-- 视图解析器 跟以前不用注解的时候一样的,可省略-->		
+  		<!-- <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"/> -->	
+  		<!-- 所有静态资源会被拦截,所以要想直接访问静态资源就要配置//所有swagger目录的访问，直接访问location指定的目录 -->
+  		<!-- 就是说,"调用"路径中出现/js_EasyUIAndJqueryAndJavaScript/**的话就代表实际走的路径/js_EasyUIAndJqueryAndJavaScript/
+  		这样,就通过mvc:resources这个标签把专门的静态资源跟动态资源区分开了 -->	
+	    <mvc:resources location="/js_EasyUIAndJqueryAndJavaScript/" mapping="/js_EasyUIAndJqueryAndJavaScript/**"></mvc:resources>
+</beans>

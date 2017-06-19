@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.you_fuli.spiderFilm.dao.mapperJava.SpiderTransactioninfoMapper">
+  <resultMap id="BaseResultMap" type="com.you_fuli.spiderFilm.dto.SpiderTransactioninfo">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="UserName" jdbcType="VARCHAR" property="username" />
+    <result column="merPrice" jdbcType="DECIMAL" property="merprice" />
+    <result column="feePrice" jdbcType="DECIMAL" property="feeprice" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="seatCount" jdbcType="INTEGER" property="seatcount" />
+    <result column="totalPrice" jdbcType="DECIMAL" property="totalprice" />
+    <result column="OrderNumber" jdbcType="VARCHAR" property="ordernumber" />
+    <result column="SpiderOrderId" jdbcType="VARCHAR" property="spiderorderid" />
+    <result column="SerialNumber" jdbcType="VARCHAR" property="serialnumber" />
+    <result column="CreateTime" jdbcType="VARCHAR" property="createtime" />
+    <result column="showDate" jdbcType="VARCHAR" property="showdate" />
+    <result column="cinemaName" jdbcType="VARCHAR" property="cinemaname" />
+    <result column="hallName" jdbcType="VARCHAR" property="hallname" />
+    <result column="filmName" jdbcType="VARCHAR" property="filmname" />
+    <result column="seatId" jdbcType="VARCHAR" property="seatid" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="confirmationId" jdbcType="VARCHAR" property="confirmationid" />
+    <result column="partnerbookingid" jdbcType="VARCHAR" property="partnerbookingid" />
+    <result column="Content" jdbcType="VARCHAR" property="content" />
+  </resultMap>
+  <resultMap type="java.util.HashMap" id="map007">
+  		<result column="SpiderOrderId" property="orderId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+  		<result column="status" property="status" javaType="java.lang.String" jdbcType="VARCHAR"/>
+  		<result column="confirmationId" property="confirmationId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+  		<result column="partnerbookingid" property="partnerbookingid" javaType="java.lang.String" jdbcType="VARCHAR"/>
+  		<result column="Content" property="content" javaType="java.lang.String" jdbcType="VARCHAR"/>
+  		<result column="lunxun" property="lunxun" javaType="java.lang.String" jdbcType="VARCHAR"/>
+  </resultMap>
+  <select id="allOrd" resultType="java.lang.String">
+  		select SpiderOrderId from Spider_TransactionInfo where status='doing' order by id asc
+  </select>
+  
+  <update id="updateStatus" parameterType="java.util.HashMap">
+  		update Spider_TransactionInfo set 
+	  		status=(#{status,jdbcType=VARCHAR}),
+	  		confirmationId=(#{confirmationId,jdbcType=VARCHAR}),
+	  		partnerbookingid=(#{partnerbookingid,jdbcType=VARCHAR}),
+	  		Content=(#{content,jdbcType=VARCHAR})
+  		where 
+  			SpiderOrderId=(#{orderId,jdbcType=VARCHAR})
+  </update>
+  
+    <!--
+  		
+  	orderId	蜘蛛网订单号	字符串
+	status	出票状态	字符串
+	confirmationId	机器取票码	字符串
+	partnerbookingid	柜台取票码	字符串
+	content	取票信息	字符串
+  	lunxun 	 
+   -->
+   
+   <select id="allFalseAndTrue" resultMap="map007">
+   		select 
+	   		SpiderOrderId,
+	   		status,
+	   		confirmationId,
+	   		partnerbookingid,
+	   		Content,
+	   		lunxun
+   		from
+   			Spider_TransactionInfo
+   		where 
+   			lunxun='weilunxun' or lunxun='' or lunxun is null
+   </select>
+   
+  
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, UserName, merPrice, feePrice, price, seatCount, totalPrice, OrderNumber, SpiderOrderId, 
+    SerialNumber, CreateTime, showDate, cinemaName, hallName, filmName, seatId, mobile, 
+    status, confirmationId, partnerbookingid, Content
+  </sql>
+  <select id="selectByExample" parameterType="com.you_fuli.spiderFilm.dto.SpiderTransactioninfoExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from Spider_TransactionInfo
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from Spider_TransactionInfo
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from Spider_TransactionInfo
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.you_fuli.spiderFilm.dto.SpiderTransactioninfoExample">
+    delete from Spider_TransactionInfo
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.you_fuli.spiderFilm.dto.SpiderTransactioninfo">
+    insert into Spider_TransactionInfo (id, UserName, merPrice, 
+      feePrice, price, seatCount, 
+      totalPrice, OrderNumber, SpiderOrderId, 
+      SerialNumber, CreateTime, showDate, 
+      cinemaName, hallName, filmName, 
+      seatId, mobile, status, 
+      confirmationId, partnerbookingid, Content
+      )
+    values (#{id,jdbcType=BIGINT}, #{username,jdbcType=VARCHAR}, #{merprice,jdbcType=DECIMAL}, 
+      #{feeprice,jdbcType=DECIMAL}, #{price,jdbcType=DECIMAL}, #{seatcount,jdbcType=INTEGER}, 
+      #{totalprice,jdbcType=DECIMAL}, #{ordernumber,jdbcType=VARCHAR}, #{spiderorderid,jdbcType=VARCHAR}, 
+      #{serialnumber,jdbcType=VARCHAR}, #{createtime,jdbcType=VARCHAR}, #{showdate,jdbcType=VARCHAR}, 
+      #{cinemaname,jdbcType=VARCHAR}, #{hallname,jdbcType=VARCHAR}, #{filmname,jdbcType=VARCHAR}, 
+      #{seatid,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{confirmationid,jdbcType=VARCHAR}, #{partnerbookingid,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.you_fuli.spiderFilm.dto.SpiderTransactioninfo">
+    insert into Spider_TransactionInfo
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="username != null">
+        UserName,
+      </if>
+      <if test="merprice != null">
+        merPrice,
+      </if>
+      <if test="feeprice != null">
+        feePrice,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="seatcount != null">
+        seatCount,
+      </if>
+      <if test="totalprice != null">
+        totalPrice,
+      </if>
+      <if test="ordernumber != null">
+        OrderNumber,
+      </if>
+      <if test="spiderorderid != null">
+        SpiderOrderId,
+      </if>
+      <if test="serialnumber != null">
+        SerialNumber,
+      </if>
+      <if test="createtime != null">
+        CreateTime,
+      </if>
+      <if test="showdate != null">
+        showDate,
+      </if>
+      <if test="cinemaname != null">
+        cinemaName,
+      </if>
+      <if test="hallname != null">
+        hallName,
+      </if>
+      <if test="filmname != null">
+        filmName,
+      </if>
+      <if test="seatid != null">
+        seatId,
+      </if>
+      <if test="mobile != null">
+        mobile,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="confirmationid != null">
+        confirmationId,
+      </if>
+      <if test="partnerbookingid != null">
+        partnerbookingid,
+      </if>
+      <if test="content != null">
+        Content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="merprice != null">
+        #{merprice,jdbcType=DECIMAL},
+      </if>
+      <if test="feeprice != null">
+        #{feeprice,jdbcType=DECIMAL},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="seatcount != null">
+        #{seatcount,jdbcType=INTEGER},
+      </if>
+      <if test="totalprice != null">
+        #{totalprice,jdbcType=DECIMAL},
+      </if>
+      <if test="ordernumber != null">
+        #{ordernumber,jdbcType=VARCHAR},
+      </if>
+      <if test="spiderorderid != null">
+        #{spiderorderid,jdbcType=VARCHAR},
+      </if>
+      <if test="serialnumber != null">
+        #{serialnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=VARCHAR},
+      </if>
+      <if test="showdate != null">
+        #{showdate,jdbcType=VARCHAR},
+      </if>
+      <if test="cinemaname != null">
+        #{cinemaname,jdbcType=VARCHAR},
+      </if>
+      <if test="hallname != null">
+        #{hallname,jdbcType=VARCHAR},
+      </if>
+      <if test="filmname != null">
+        #{filmname,jdbcType=VARCHAR},
+      </if>
+      <if test="seatid != null">
+        #{seatid,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null">
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="confirmationid != null">
+        #{confirmationid,jdbcType=VARCHAR},
+      </if>
+      <if test="partnerbookingid != null">
+        #{partnerbookingid,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.you_fuli.spiderFilm.dto.SpiderTransactioninfoExample" resultType="java.lang.Long">
+    select count(*) from Spider_TransactionInfo
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update Spider_TransactionInfo
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.username != null">
+        UserName = #{record.username,jdbcType=VARCHAR},
+      </if>
+      <if test="record.merprice != null">
+        merPrice = #{record.merprice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.feeprice != null">
+        feePrice = #{record.feeprice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.price != null">
+        price = #{record.price,jdbcType=DECIMAL},
+      </if>
+      <if test="record.seatcount != null">
+        seatCount = #{record.seatcount,jdbcType=INTEGER},
+      </if>
+      <if test="record.totalprice != null">
+        totalPrice = #{record.totalprice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.ordernumber != null">
+        OrderNumber = #{record.ordernumber,jdbcType=VARCHAR},
+      </if>
+      <if test="record.spiderorderid != null">
+        SpiderOrderId = #{record.spiderorderid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.serialnumber != null">
+        SerialNumber = #{record.serialnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createtime != null">
+        CreateTime = #{record.createtime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.showdate != null">
+        showDate = #{record.showdate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cinemaname != null">
+        cinemaName = #{record.cinemaname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.hallname != null">
+        hallName = #{record.hallname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.filmname != null">
+        filmName = #{record.filmname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.seatid != null">
+        seatId = #{record.seatid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mobile != null">
+        mobile = #{record.mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=VARCHAR},
+      </if>
+      <if test="record.confirmationid != null">
+        confirmationId = #{record.confirmationid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.partnerbookingid != null">
+        partnerbookingid = #{record.partnerbookingid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.content != null">
+        Content = #{record.content,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update Spider_TransactionInfo
+    set id = #{record.id,jdbcType=BIGINT},
+      UserName = #{record.username,jdbcType=VARCHAR},
+      merPrice = #{record.merprice,jdbcType=DECIMAL},
+      feePrice = #{record.feeprice,jdbcType=DECIMAL},
+      price = #{record.price,jdbcType=DECIMAL},
+      seatCount = #{record.seatcount,jdbcType=INTEGER},
+      totalPrice = #{record.totalprice,jdbcType=DECIMAL},
+      OrderNumber = #{record.ordernumber,jdbcType=VARCHAR},
+      SpiderOrderId = #{record.spiderorderid,jdbcType=VARCHAR},
+      SerialNumber = #{record.serialnumber,jdbcType=VARCHAR},
+      CreateTime = #{record.createtime,jdbcType=VARCHAR},
+      showDate = #{record.showdate,jdbcType=VARCHAR},
+      cinemaName = #{record.cinemaname,jdbcType=VARCHAR},
+      hallName = #{record.hallname,jdbcType=VARCHAR},
+      filmName = #{record.filmname,jdbcType=VARCHAR},
+      seatId = #{record.seatid,jdbcType=VARCHAR},
+      mobile = #{record.mobile,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=VARCHAR},
+      confirmationId = #{record.confirmationid,jdbcType=VARCHAR},
+      partnerbookingid = #{record.partnerbookingid,jdbcType=VARCHAR},
+      Content = #{record.content,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.you_fuli.spiderFilm.dto.SpiderTransactioninfo">
+    update Spider_TransactionInfo
+    <set>
+      <if test="username != null">
+        UserName = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="merprice != null">
+        merPrice = #{merprice,jdbcType=DECIMAL},
+      </if>
+      <if test="feeprice != null">
+        feePrice = #{feeprice,jdbcType=DECIMAL},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="seatcount != null">
+        seatCount = #{seatcount,jdbcType=INTEGER},
+      </if>
+      <if test="totalprice != null">
+        totalPrice = #{totalprice,jdbcType=DECIMAL},
+      </if>
+      <if test="ordernumber != null">
+        OrderNumber = #{ordernumber,jdbcType=VARCHAR},
+      </if>
+      <if test="spiderorderid != null">
+        SpiderOrderId = #{spiderorderid,jdbcType=VARCHAR},
+      </if>
+      <if test="serialnumber != null">
+        SerialNumber = #{serialnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        CreateTime = #{createtime,jdbcType=VARCHAR},
+      </if>
+      <if test="showdate != null">
+        showDate = #{showdate,jdbcType=VARCHAR},
+      </if>
+      <if test="cinemaname != null">
+        cinemaName = #{cinemaname,jdbcType=VARCHAR},
+      </if>
+      <if test="hallname != null">
+        hallName = #{hallname,jdbcType=VARCHAR},
+      </if>
+      <if test="filmname != null">
+        filmName = #{filmname,jdbcType=VARCHAR},
+      </if>
+      <if test="seatid != null">
+        seatId = #{seatid,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null">
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="confirmationid != null">
+        confirmationId = #{confirmationid,jdbcType=VARCHAR},
+      </if>
+      <if test="partnerbookingid != null">
+        partnerbookingid = #{partnerbookingid,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        Content = #{content,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.you_fuli.spiderFilm.dto.SpiderTransactioninfo">
+    update Spider_TransactionInfo
+    set UserName = #{username,jdbcType=VARCHAR},
+      merPrice = #{merprice,jdbcType=DECIMAL},
+      feePrice = #{feeprice,jdbcType=DECIMAL},
+      price = #{price,jdbcType=DECIMAL},
+      seatCount = #{seatcount,jdbcType=INTEGER},
+      totalPrice = #{totalprice,jdbcType=DECIMAL},
+      OrderNumber = #{ordernumber,jdbcType=VARCHAR},
+      SpiderOrderId = #{spiderorderid,jdbcType=VARCHAR},
+      SerialNumber = #{serialnumber,jdbcType=VARCHAR},
+      CreateTime = #{createtime,jdbcType=VARCHAR},
+      showDate = #{showdate,jdbcType=VARCHAR},
+      cinemaName = #{cinemaname,jdbcType=VARCHAR},
+      hallName = #{hallname,jdbcType=VARCHAR},
+      filmName = #{filmname,jdbcType=VARCHAR},
+      seatId = #{seatid,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      confirmationId = #{confirmationid,jdbcType=VARCHAR},
+      partnerbookingid = #{partnerbookingid,jdbcType=VARCHAR},
+      Content = #{content,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

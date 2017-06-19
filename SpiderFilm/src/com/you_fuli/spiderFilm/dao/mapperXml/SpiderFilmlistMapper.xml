@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.you_fuli.spiderFilm.dao.mapperJava.SpiderFilmlistMapper">
+  <resultMap id="BaseResultMap" type="com.you_fuli.spiderFilm.dto.SpiderFilmlist">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="filmId" jdbcType="VARCHAR" property="filmid" />
+    <result column="filmName" jdbcType="VARCHAR" property="filmname" />
+    <result column="englishName" jdbcType="VARCHAR" property="englishname" />
+    <result column="language" jdbcType="VARCHAR" property="language" />
+    <result column="duration" jdbcType="VARCHAR" property="duration" />
+    <result column="dimensional" jdbcType="VARCHAR" property="dimensional" />
+    <result column="country" jdbcType="VARCHAR" property="country" />
+    <result column="director" jdbcType="VARCHAR" property="director" />
+    <result column="actor" jdbcType="VARCHAR" property="actor" />
+    <result column="openingDate" jdbcType="VARCHAR" property="openingdate" />
+    <result column="catalog" jdbcType="VARCHAR" property="catalog" />
+    <result column="picture" jdbcType="VARCHAR" property="picture" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, filmId, filmName, englishName, language, duration, dimensional, country, director, 
+    actor, openingDate, catalog, picture, description
+  </sql>
+  <select id="selectByExample" parameterType="com.you_fuli.spiderFilm.dto.SpiderFilmlistExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from Spider_filmList
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from Spider_filmList
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from Spider_filmList
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.you_fuli.spiderFilm.dto.SpiderFilmlistExample">
+    delete from Spider_filmList
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.you_fuli.spiderFilm.dto.SpiderFilmlist">
+    insert into Spider_filmList (id, filmId, filmName, 
+      englishName, language, duration, 
+      dimensional, country, director, 
+      actor, openingDate, catalog, 
+      picture, description)
+    values (#{id,jdbcType=BIGINT}, #{filmid,jdbcType=VARCHAR}, #{filmname,jdbcType=VARCHAR}, 
+      #{englishname,jdbcType=VARCHAR}, #{language,jdbcType=VARCHAR}, #{duration,jdbcType=VARCHAR}, 
+      #{dimensional,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, #{director,jdbcType=VARCHAR}, 
+      #{actor,jdbcType=VARCHAR}, #{openingdate,jdbcType=VARCHAR}, #{catalog,jdbcType=VARCHAR}, 
+      #{picture,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.you_fuli.spiderFilm.dto.SpiderFilmlist">
+    insert into Spider_filmList
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="filmid != null">
+        filmId,
+      </if>
+      <if test="filmname != null">
+        filmName,
+      </if>
+      <if test="englishname != null">
+        englishName,
+      </if>
+      <if test="language != null">
+        language,
+      </if>
+      <if test="duration != null">
+        duration,
+      </if>
+      <if test="dimensional != null">
+        dimensional,
+      </if>
+      <if test="country != null">
+        country,
+      </if>
+      <if test="director != null">
+        director,
+      </if>
+      <if test="actor != null">
+        actor,
+      </if>
+      <if test="openingdate != null">
+        openingDate,
+      </if>
+      <if test="catalog != null">
+        catalog,
+      </if>
+      <if test="picture != null">
+        picture,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="filmid != null">
+        #{filmid,jdbcType=VARCHAR},
+      </if>
+      <if test="filmname != null">
+        #{filmname,jdbcType=VARCHAR},
+      </if>
+      <if test="englishname != null">
+        #{englishname,jdbcType=VARCHAR},
+      </if>
+      <if test="language != null">
+        #{language,jdbcType=VARCHAR},
+      </if>
+      <if test="duration != null">
+        #{duration,jdbcType=VARCHAR},
+      </if>
+      <if test="dimensional != null">
+        #{dimensional,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null">
+        #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="director != null">
+        #{director,jdbcType=VARCHAR},
+      </if>
+      <if test="actor != null">
+        #{actor,jdbcType=VARCHAR},
+      </if>
+      <if test="openingdate != null">
+        #{openingdate,jdbcType=VARCHAR},
+      </if>
+      <if test="catalog != null">
+        #{catalog,jdbcType=VARCHAR},
+      </if>
+      <if test="picture != null">
+        #{picture,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.you_fuli.spiderFilm.dto.SpiderFilmlistExample" resultType="java.lang.Long">
+    select count(*) from Spider_filmList
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update Spider_filmList
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.filmid != null">
+        filmId = #{record.filmid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.filmname != null">
+        filmName = #{record.filmname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.englishname != null">
+        englishName = #{record.englishname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.language != null">
+        language = #{record.language,jdbcType=VARCHAR},
+      </if>
+      <if test="record.duration != null">
+        duration = #{record.duration,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dimensional != null">
+        dimensional = #{record.dimensional,jdbcType=VARCHAR},
+      </if>
+      <if test="record.country != null">
+        country = #{record.country,jdbcType=VARCHAR},
+      </if>
+      <if test="record.director != null">
+        director = #{record.director,jdbcType=VARCHAR},
+      </if>
+      <if test="record.actor != null">
+        actor = #{record.actor,jdbcType=VARCHAR},
+      </if>
+      <if test="record.openingdate != null">
+        openingDate = #{record.openingdate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.catalog != null">
+        catalog = #{record.catalog,jdbcType=VARCHAR},
+      </if>
+      <if test="record.picture != null">
+        picture = #{record.picture,jdbcType=VARCHAR},
+      </if>
+      <if test="record.description != null">
+        description = #{record.description,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update Spider_filmList
+    set id = #{record.id,jdbcType=BIGINT},
+      filmId = #{record.filmid,jdbcType=VARCHAR},
+      filmName = #{record.filmname,jdbcType=VARCHAR},
+      englishName = #{record.englishname,jdbcType=VARCHAR},
+      language = #{record.language,jdbcType=VARCHAR},
+      duration = #{record.duration,jdbcType=VARCHAR},
+      dimensional = #{record.dimensional,jdbcType=VARCHAR},
+      country = #{record.country,jdbcType=VARCHAR},
+      director = #{record.director,jdbcType=VARCHAR},
+      actor = #{record.actor,jdbcType=VARCHAR},
+      openingDate = #{record.openingdate,jdbcType=VARCHAR},
+      catalog = #{record.catalog,jdbcType=VARCHAR},
+      picture = #{record.picture,jdbcType=VARCHAR},
+      description = #{record.description,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.you_fuli.spiderFilm.dto.SpiderFilmlist">
+    update Spider_filmList
+    <set>
+      <if test="filmid != null">
+        filmId = #{filmid,jdbcType=VARCHAR},
+      </if>
+      <if test="filmname != null">
+        filmName = #{filmname,jdbcType=VARCHAR},
+      </if>
+      <if test="englishname != null">
+        englishName = #{englishname,jdbcType=VARCHAR},
+      </if>
+      <if test="language != null">
+        language = #{language,jdbcType=VARCHAR},
+      </if>
+      <if test="duration != null">
+        duration = #{duration,jdbcType=VARCHAR},
+      </if>
+      <if test="dimensional != null">
+        dimensional = #{dimensional,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null">
+        country = #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="director != null">
+        director = #{director,jdbcType=VARCHAR},
+      </if>
+      <if test="actor != null">
+        actor = #{actor,jdbcType=VARCHAR},
+      </if>
+      <if test="openingdate != null">
+        openingDate = #{openingdate,jdbcType=VARCHAR},
+      </if>
+      <if test="catalog != null">
+        catalog = #{catalog,jdbcType=VARCHAR},
+      </if>
+      <if test="picture != null">
+        picture = #{picture,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.you_fuli.spiderFilm.dto.SpiderFilmlist">
+    update Spider_filmList
+    set filmId = #{filmid,jdbcType=VARCHAR},
+      filmName = #{filmname,jdbcType=VARCHAR},
+      englishName = #{englishname,jdbcType=VARCHAR},
+      language = #{language,jdbcType=VARCHAR},
+      duration = #{duration,jdbcType=VARCHAR},
+      dimensional = #{dimensional,jdbcType=VARCHAR},
+      country = #{country,jdbcType=VARCHAR},
+      director = #{director,jdbcType=VARCHAR},
+      actor = #{actor,jdbcType=VARCHAR},
+      openingDate = #{openingdate,jdbcType=VARCHAR},
+      catalog = #{catalog,jdbcType=VARCHAR},
+      picture = #{picture,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.you_fuli.spiderFilm.dao.mapperJava.SpiderCitylistMapper">
+  <resultMap id="BaseResultMap" type="com.you_fuli.spiderFilm.dto.SpiderCitylist">
+    <id column="cityId" jdbcType="VARCHAR" property="cityid" />
+    <result column="cityName" jdbcType="VARCHAR" property="cityname" />
+    <result column="cityType" jdbcType="VARCHAR" property="citytype" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    cityId, cityName, cityType
+  </sql>
+  <select id="selectByExample" parameterType="com.you_fuli.spiderFilm.dto.SpiderCitylistExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from Spider_cityList
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from Spider_cityList
+    where cityId = #{cityid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from Spider_cityList
+    where cityId = #{cityid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.you_fuli.spiderFilm.dto.SpiderCitylistExample">
+    delete from Spider_cityList
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.you_fuli.spiderFilm.dto.SpiderCitylist">
+    insert into Spider_cityList (cityId, cityName, cityType
+      )
+    values (#{cityid,jdbcType=VARCHAR}, #{cityname,jdbcType=VARCHAR}, #{citytype,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.you_fuli.spiderFilm.dto.SpiderCitylist">
+    insert into Spider_cityList
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="cityid != null">
+        cityId,
+      </if>
+      <if test="cityname != null">
+        cityName,
+      </if>
+      <if test="citytype != null">
+        cityType,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="cityid != null">
+        #{cityid,jdbcType=VARCHAR},
+      </if>
+      <if test="cityname != null">
+        #{cityname,jdbcType=VARCHAR},
+      </if>
+      <if test="citytype != null">
+        #{citytype,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.you_fuli.spiderFilm.dto.SpiderCitylistExample" resultType="java.lang.Long">
+    select count(*) from Spider_cityList
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update Spider_cityList
+    <set>
+      <if test="record.cityid != null">
+        cityId = #{record.cityid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cityname != null">
+        cityName = #{record.cityname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.citytype != null">
+        cityType = #{record.citytype,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update Spider_cityList
+    set cityId = #{record.cityid,jdbcType=VARCHAR},
+      cityName = #{record.cityname,jdbcType=VARCHAR},
+      cityType = #{record.citytype,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.you_fuli.spiderFilm.dto.SpiderCitylist">
+    update Spider_cityList
+    <set>
+      <if test="cityname != null">
+        cityName = #{cityname,jdbcType=VARCHAR},
+      </if>
+      <if test="citytype != null">
+        cityType = #{citytype,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where cityId = #{cityid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.you_fuli.spiderFilm.dto.SpiderCitylist">
+    update Spider_cityList
+    set cityName = #{cityname,jdbcType=VARCHAR},
+      cityType = #{citytype,jdbcType=VARCHAR}
+    where cityId = #{cityid,jdbcType=VARCHAR}
+  </update>
+</mapper>
