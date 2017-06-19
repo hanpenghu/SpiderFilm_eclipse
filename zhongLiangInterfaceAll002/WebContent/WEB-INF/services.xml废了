@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://xfire.codehaus.org/config/1.0">  
+<service>
+  http://localhost:8081/zhongLiangInterfaceAll/services/ZL?wsdl
+    <name>ZL</name>  
+    <namespace>zhongLiang</namespace>
+    <serviceClass>hanhan.webServiceZL.I.GoodsInterface</serviceClass>  
+    <implementationClass>hanhan.webServiceZL.Impl.GoodsInfo</implementationClass>  
+  </service>
+</beans>
+<!-- <beans>
+ <service xmlns="http://xfire.codehaus.org/config/1.0">
+  <name>ZL</name>
+  <serviceClass>hanhan.webServiceZL.I.GoodsInterface</serviceClass>
+  <implementationClass>hanhan.webServiceZL.Impl.GoodsInfo</implementationClass>
+  <style>wrapped</style>
+  <use>literal</use>
+  <scope>application</scope>
+ </service>
+</beans> -->

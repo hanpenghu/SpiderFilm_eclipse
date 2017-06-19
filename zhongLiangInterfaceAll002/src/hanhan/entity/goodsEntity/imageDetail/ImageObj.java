@@ -1,0 +1,32 @@
+package hanhan.entity.goodsEntity.imageDetail;
+
+public class ImageObj {
+	private String path=null;
+    private String isprimary=null;
+	public ImageObj() {
+		// TODO Auto-generated constructor stub
+	}
+	public ImageObj(String path, String isprimary) {
+		super();
+		this.path = path;
+		this.isprimary = isprimary;
+	}
+	
+	public String getPath() {
+		return path;
+	}
+	public void setPath(String path) {
+		this.path = path;
+	}
+	public String getIsprimary() {
+		return isprimary;
+	}
+	public void setIsprimary(String isprimary) {
+		this.isprimary = isprimary;
+	}
+	@Override
+	public String toString() {
+		return "ImageObj [path=" + path + ", isprimary=" + isprimary + "]";
+	}
+	
+}

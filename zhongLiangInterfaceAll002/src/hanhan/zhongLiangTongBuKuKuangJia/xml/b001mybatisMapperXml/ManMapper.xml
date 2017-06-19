@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hanhan.zhongLiangTongBuKuKuangJia.a002IterfacMapper.ICRUDmanDB">
+ 
+
+  <resultMap id="goodsPoolEntityDBmap" type="hanhan.entity.goodsEntity.GoodsPool">
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="page_num" jdbcType="INTEGER" property="page_num" />
+  </resultMap>
+  
+  <!-- 看分类表是否有数据 -->
+  <select id="isCategoryTbHaveData" resultType="INTEGER">
+  		select count(*) from Hishop_Categories
+  </select>
+  <!-- 删除整个分类表 -->
+  <delete id="deleteCategoryTb">
+  	 delete from Hishop_Categories
+  </delete>
+  <!-- 查看商品表的MainCategoryPath是否都是空,都是空的话将来启动关联机制 -->
+  <select id="isProductsCategoryAssociateHaveData" resultType="INTEGER">
+  		select count(MainCategoryPath) from Hishop_Products where (MainCategoryPath != NULL)or(MainCategoryPath != '')
+  </select>
+  <insert id="insertShangPinChiHeYeMa" parameterType="List">
+  	<!-- insert into shang_pin_chi_ye_ma_he_ming_zi(name,page_num)values(#{name,jdbcType=VARCHAR},#{page_num,jdbcType=INTEGER}) -->
+  	insert into shang_pin_chi_ye_ma_he_ming_zi(name,page_num)values
+	  	<foreach collection="list" item="item" separator=",">
+		  	(
+				#{item.name,jdbcType=VARCHAR},#{item.page_num,jdbcType=INTEGER}
+			)
+		</foreach>
+  </insert>
+  <!-- 删除页码所有表 -->
+  <delete id="deleteAllShangPinYeMaBiao" >
+  	delete from shang_pin_chi_ye_ma_he_ming_zi
+  </delete>
+  <!-- 选出所有商品页码-->
+  <select id="selectAllShangPinYeMa" resultMap="goodsPoolEntityDBmap">
+    select * from shang_pin_chi_ye_ma_he_ming_zi
+  </select>
+  
+
+  
+   <resultMap id="goodsIDEntityDBmap" type="hanhan.entity.goodsEntity.goodsID.GoodsID">
+    <result column="itemid" jdbcType="VARCHAR" property="itemid" />
+  </resultMap>
+ 
+  <!-- 把所有商品Id入库 -->
+  <insert id="insertLinShiShangPinIdKu" parameterType="List">
+  		insert into suo_you_shang_pin_id_lin_shi_ku(itemid)values
+  		<foreach collection="list" item="item" separator=",">
+	  		(
+				#{item.itemid,jdbcType=VARCHAR}
+			)
+		</foreach>	
+		
+  </insert>
+    <!--一次取出所有商品的id-->
+  <select id="queryAllGoodsID" resultType="hanhan.entity.goodsEntity.goodsID.GoodsID">
+   		select  itemid from suo_you_shang_pin_id_lin_shi_ku
+  </select>
+  <!-- 分页,一次取出50个ID -->
+  <select id="query50GoodsID" parameterType="INTEGER" resultType="hanhan.entity.goodsEntity.goodsID.GoodsID">
+   		select top(50) itemid from 
+   		suo_you_shang_pin_id_lin_shi_ku where itemid not in
+   		(
+   			select top
+   			(
+   				(50)*((#{currP})-1)
+   			) itemid from suo_you_shang_pin_id_lin_shi_ku ORDER BY itemid
+   		)ORDER BY itemid
+  </select>
+  <!-- 分页,一次取出若干个GoodsID -->
+   <select id="querySomeGoodsID" parameterType="INTEGER" resultType="hanhan.entity.goodsEntity.goodsID.GoodsID">
+   		select top(#{perPageNum}) itemid from 
+   		suo_you_shang_pin_id_lin_shi_ku where itemid not in
+   		(
+   			select top
+   			(
+   				(#{perPageNum})*((#{currP})-1)
+   			) 
+   			itemid from suo_you_shang_pin_id_lin_shi_ku ORDER BY itemid
+   		)ORDER BY itemid
+  </select>
+  <!-- 统计商品id临时库中的id总数,为分页做准备 -->
+  <select id="queryAllGoosIDCount" resultType="INTEGER">
+   		select count(itemid) from suo_you_shang_pin_id_lin_shi_ku
+  </select>
+  
+  
+  <!-- 删除所有商品id -->
+  <delete id="deleteSuoYouShangPinId" >
+  	delete from suo_you_shang_pin_id_lin_shi_ku
+  </delete>
+  <!-- 把所有商品详细订单入库 -->
+   <insert id="insertListBiaoShangPinXiangQing" parameterType="List">
+  		insert into shang_pin_xiang_qing_lin_shi_ku(goodsid,weight,brandName,category,goodsname,place_production,goodsbarcode,unit,prodescription,specification,pubflag)values
+  		<foreach collection="list" item="item" separator=",">
+  		(
+		#{item.goodsid,jdbcType=VARCHAR},#{item.weight,jdbcType=VARCHAR},
+		#{item.brandName,jdbcType=VARCHAR},#{item.category,jdbcType=VARCHAR},
+		#{item.goodsname,jdbcType=VARCHAR},#{item.place_production,jdbcType=VARCHAR},
+		#{item.goodsbarcode,jdbcType=VARCHAR},#{item.unit,jdbcType=VARCHAR},
+		#{item.prodescription,jdbcType=VARCHAR},#{item.specification,jdbcType=VARCHAR},
+		#{item.pubflag,jdbcType=VARCHAR}
+		)
+		</foreach>	
+  </insert>
+  <!-- 删除所有商品详情 -->
+  <delete id="deleteAllgoodsDetail" >
+  	delete from shang_pin_xiang_qing_lin_shi_ku
+  </delete>
+  <!-- 下面是商品上下架 -->
+  <insert id="insertShangPinShangXiaJia"  parameterType="List">
+	  <foreach collection="list" item="item">
+	  	insert into shang_pin_shang_xia_jia(goodsid,status)values(#{item.goodsid,jdbcType=VARCHAR},#{item.status,jdbcType=VARCHAR});
+	  </foreach>	
+  </insert>
+  <delete id="deletAllShangXiaJia">
+  	delete from shang_pin_shang_xia_jia
+  </delete>
+  <!-- 商品图片信息 -->
+   <insert id="insertShangPinTuPianXinXi"  parameterType="List">
+   insert into shang_pin_tu_pian(goodsid,path1,isprimary1,path2,isprimary2,path3,isprimary3,path4,isprimary4)values
+	  <foreach collection="list" item="item" separator=",">
+	  	(
+	  	#{item.goodsid,jdbcType=VARCHAR},#{item.path1,jdbcType=VARCHAR},#{item.isprimary1,jdbcType=VARCHAR},
+	  	#{item.path2,jdbcType=VARCHAR},#{item.isprimary2,jdbcType=VARCHAR},
+	  	#{item.path3,jdbcType=VARCHAR},#{item.isprimary3,jdbcType=VARCHAR},
+	  	#{item.path4,jdbcType=VARCHAR},#{item.isprimary4,jdbcType=VARCHAR}
+	  	)
+	  </foreach>	
+  </insert>
+   <delete id="deleteAllTuPian">
+  	delete from shang_pin_tu_pian
+  </delete>
+  <!-- 商品好评度 -->
+  
+  <insert id="insertShangPinHaoPingDu"  parameterType="List">
+	  <foreach collection="list" item="item">
+	  	insert into shang_pin_hao_ping_du(averageScore,generalRate,goodRate,skuId,poorRate)values
+	  	(#{item.averageScore,jdbcType=VARCHAR},#{item.generalRate,jdbcType=VARCHAR},#{item.goodRate,jdbcType=VARCHAR},
+	  	#{item.skuId,jdbcType=VARCHAR},#{item.poorRate,jdbcType=VARCHAR}
+	  	)
+	  </foreach>	
+  </insert>
+   <delete id="deleteShangPinHaoPingDu">
+  	delete from shang_pin_hao_ping_du
+  </delete>
+  <!-- 商品价格 -->
+  <insert id="insertShangPinJiaGe" parameterType="List">
+  		insert into shang_pin_jia_ge(skuid,price)values
+  	<foreach collection="list" item="item" separator=",">
+	  (
+		  	#{item.skuid,jdbcType=VARCHAR}
+		  	,#{item.price,jdbcType=VARCHAR}
+	  )
+	  </foreach>	
+  </insert>
+   <delete id="deleteShangPinJiaGe">
+  	delete from shang_pin_jia_ge
+  </delete>
+  <!-- 插入商品到海商 -->
+   <insert id="insertToHaiShangProduct"  parameterType="hanhan.entity.goodsEntity.Hishop_Products.Hishop_Products">
+	  insert into Hishop_Products(SupplierId,
+CategoryId,TypeId,ProductName,ProductCode,ShortDescription,Unit,
+Description,MobbileDescription,Title,Meta_Description,Meta_Keywords,SaleStatus,
+AddedDate,UpdateDate,VistiCounts,SaleCounts,ShowSaleCounts,DisplaySequence,ImageUrl1,
+ImageUrl2,ImageUrl3,ImageUrl4,ImageUrl5,ThumbnailUrl40,ThumbnailUrl60,ThumbnailUrl100,
+ThumbnailUrl160,ThumbnailUrl180,ThumbnailUrl220,ThumbnailUrl310,ThumbnailUrl410,
+MarketPrice,BrandId,MainCategoryPath,ExtendCategoryPath,ExtendCategoryPath1,ExtendCategoryPath2,
+ExtendCategoryPath3,ExtendCategoryPath4,HasSKU,IsfreeShipping,TaobaoProductId,ReferralDeduct,
+SubMemberDeduct,SubReferralDeduct,ShippingTemplateId,SecondLevelDeduct,ThreeLevelDeduct
+)values(#{SupplierId},
+	  #{CategoryId},#{TypeId},#{ProductName},#{ProductCode},#{ShortDescription},
+	  #{Unit},#{Description,jdbcType=LONGVARCHAR},#{MobbileDescription,jdbcType=LONGVARCHAR},#{Title},#{Meta_Description},#{Meta_Keywords},
+	  #{SaleStatus},#{AddedDate},#{UpdateDate},#{VistiCounts},#{SaleCounts},
+		#{ShowSaleCounts},#{DisplaySequence},#{ImageUrl1},#{ImageUrl2},#{ImageUrl3},
+		#{ImageUrl4},#{ImageUrl5},#{ThumbnailUrl40},#{ThumbnailUrl60},#{ThumbnailUrl100},
+		#{ThumbnailUrl160},#{ThumbnailUrl180},#{ThumbnailUrl220},
+		#{ThumbnailUrl310},#{ThumbnailUrl410},
+		#{MarketPrice,jdbcType=DECIMAL},#{BrandId},#{MainCategoryPath},#{ExtendCategoryPath},
+		#{ExtendCategoryPath1},#{ExtendCategoryPath2},#{ExtendCategoryPath3},
+		#{ExtendCategoryPath4},#{HasSKU},#{IsfreeShipping},#{TaobaoProductId,jdbcType=BIGINT},#{ReferralDeduct,jdbcType=DECIMAL},
+		#{SubMemberDeduct,jdbcType=DECIMAL},#{SubReferralDeduct,jdbcType=DECIMAL},#{ShippingTemplateId},#{SecondLevelDeduct,jdbcType=DECIMAL},#{ThreeLevelDeduct,jdbcType=DECIMAL})
+  </insert>
+  <delete id="deleteHaiShangProduct">
+  	delete from Hishop_Products
+  </delete>
+  <!-- 更新商品 -->
+  <update id="updateHishop_Products" parameterType="hanhan.entity.goodsEntity.Hishop_Products.Hishop_Products">
+  		update Hishop_Products set Description=(#{Description,jdbcType=LONGVARCHAR})
+  		,ImageUrl1=(#{ImageUrl1})
+  		,ImageUrl2=(#{ImageUrl2})
+  		,ImageUrl3=(#{ImageUrl3})
+  		,ImageUrl4=(#{ImageUrl4})
+  		,ImageUrl5=(#{ImageUrl5})
+  		,ThumbnailUrl40=(#{ThumbnailUrl40})
+  		,ThumbnailUrl60=(#{ThumbnailUrl60})
+  		,ThumbnailUrl100=#{ThumbnailUrl100}
+  		,ThumbnailUrl160=#{ThumbnailUrl160}
+  		,ThumbnailUrl180=#{ThumbnailUrl180}
+  		,ThumbnailUrl220=(#{ThumbnailUrl220})
+  		,ThumbnailUrl310=#{ThumbnailUrl310}
+  		,ThumbnailUrl410=#{ThumbnailUrl410}
+  		,SaleStatus=(#{SaleStatus})
+  		,MarketPrice=(#{MarketPrice,jdbcType=DECIMAL})
+  		where ProductCode=(#{ProductCode,jdbcType=VARCHAR})
+  </update>
+  <delete id="deleteOneOfHishop_Products" parameterType="hanhan.entity.goodsEntity.Hishop_Products.Hishop_Products">
+  		delete from Hishop_Products where ProductName=(#{ProductName})
+  </delete>
+  <!-- 海商分类用 -->
+  <!-- 从临时库拿到所有信息 -->
+  <select id="getAllLinShiKuGoodsDetail" resultType="hanhan.entity.goodsEntity.goodsDetail.GoodsDetail">
+   		select * from shang_pin_xiang_qing_lin_shi_ku
+  </select>
+  <!-- 插入海商商品分类库 --><!-- #{item.CategoryId,jdbcType=INTEGER}, -->
+  <insert id="insertToHishop_Categories"  parameterType="hanhan.entity.goodsEntity.Hishop_Categories.Hishop_Categories">  
+	  	insert into Hishop_Categories
+	  	(
+		  	CategoryId,Name,DisplaySequence,Meta_Title,Meta_Description,Meta_Keywords,
+		  	ParentCategoryId,Depth,Path,RewriteName,SKUPrefix,AssociatedProductType,
+			Notes1,Notes2,Notes3,Notes4,Notes5,Theme,HasChildren,Icon,BigImageUrl
+	  	)values(
+	  		#{CategoryId,jdbcType=INTEGER},#{Name,jdbcType=VARCHAR},#{DisplaySequence,jdbcType=INTEGER},
+	  		#{Meta_Title,jdbcType=VARCHAR},#{Meta_Description,jdbcType=VARCHAR},#{Meta_Keywords,jdbcType=VARCHAR},
+	  		#{ParentCategoryId,jdbcType=INTEGER},#{Depth,jdbcType=INTEGER},#{Path,jdbcType=VARCHAR},
+	  		#{RewriteName},#{SKUPrefix},#{AssociatedProductType},
+	  		#{Notes1,jdbcType=LONGVARCHAR},#{Notes2,jdbcType=LONGVARCHAR},#{Notes3,jdbcType=LONGVARCHAR},
+	  		#{Notes4,jdbcType=LONGVARCHAR},#{Notes5,jdbcType=LONGVARCHAR},#{Theme},
+	  		#{HasChildren,jdbcType=BIT},#{Icon},#{BigImageUrl}
+	  	)	
+  	</insert>
+  <!-- 通过id得到商品详情 -->
+  <select id="getDetailById" parameterType="hanhan.entity.goodsEntity.goodsID.GoodsID" resultType="hanhan.entity.goodsEntity.goodsDetail.GoodsDetail">
+   		select * from shang_pin_xiang_qing_lin_shi_ku where goodsid=#{itemid}
+  </select>
+  <!-- 通过goodsName在商品详情临时表中找到商品的goodsId -->
+  <select id="getGoodsIdByGoodsNameInGoodsDetailLinShiTab" parameterType="java.lang.String" resultType="java.lang.String">
+  	select goodsid from shang_pin_xiang_qing_lin_shi_ku where goodsname=#{ProductName}
+  </select>
+   <!-- 统计商品详情总数(临时库)-->
+   <select id="getCountOfAllGoodsDetail" resultType="INTEGER">
+   		select count(goodsid) from shang_pin_xiang_qing_lin_shi_ku
+  </select>
+  <!-- 从商品详情临时库拿到若干(分页)详情,所有字段都拿到(getSomeGoodsDetail) -->
+   <select id="getSomeGoodsDetail" parameterType="INTEGER" resultType="hanhan.entity.goodsEntity.goodsDetail.GoodsDetail">
+   		select top(#{perPageNum}) * from shang_pin_xiang_qing_lin_shi_ku where goodsid not in(
+   			select top((#{perPageNum})*((#{currP})-1)) goodsid from shang_pin_xiang_qing_lin_shi_ku ORDER BY goodsid
+   		)ORDER BY goodsid
+  </select>
+  
+
+  <!-- 得到中间表的图片详情,通过id得到 -->
+   <select id="getImage" parameterType="hanhan.entity.goodsEntity.goodsID.GoodsID" resultType="hanhan.entity.goodsEntity.imageEtity.shang_pin_tu_pian">
+   		select * from shang_pin_tu_pian where goodsid=#{itemid}
+  </select>
+  <!-- 通过id得到商品价格 -->
+  <select id="getPrice" parameterType="hanhan.entity.goodsEntity.goodsID.GoodsID" resultType="hanhan.entity.goodsEntity.goodsPrice.GoodsPriceDetail">
+   		select * from shang_pin_jia_ge where skuid=#{itemid}
+  </select>
+  <!-- 为了排除有多个goodsid重复的可能性,得到一组商品价格 -->
+  <select id="getPriceS" parameterType="hanhan.entity.goodsEntity.goodsID.GoodsID" resultType="hanhan.entity.goodsEntity.goodsPrice.GoodsPriceDetail">
+   		select * from shang_pin_jia_ge where skuid=#{itemid}
+  </select>
+  <!-- 设置商品下架,根据中粮的goodsId -->
+  <update id="setSaleStatus0" parameterType="java.lang.String">
+     update Hishop_Products set SaleStatus=0 where ProductCode=#{goodsId}
+  </update>
+  <select id="ifExsitProducts" parameterType="hanhan.entity.goodsEntity.Hishop_Products.Hishop_Products" resultType="INTEGER">
+   		select count(ProductCode) from Hishop_Products where ProductCode=#{ProductCode}
+  </select>
+  <!-- dui yu mei yi jing cun zai de shang pin ,geng xin ta de SaleStatus zhuang tai -->
+  <update id="updateSaleStauts" parameterType="hanhan.entity.goodsEntity.Hishop_Products.Hishop_Products">
+   		 update Hishop_Products set SaleStatus=(#{SaleStatus})
+ 		 where ProductName=(#{ProductName,jdbcType=VARCHAR}) and SaleStatus!=(#{SaleStatus})
+  </update>
+  <!-- 将中粮页面的区域仓库对照表导入到数据库中的临时区域仓库对照表 -->
+  <insert id="insertToQuYuCangKuDuiZhaoBiao"  parameterType="List">
+	  <foreach collection="list" item="item">
+	  	insert into area_cangKu_dui_zhao_biao(areaID,warehouseID,areaName)values
+	  	(#{item.areaID,jdbcType=VARCHAR},#{item.warehouseID,jdbcType=VARCHAR},#{item.areaName,jdbcType=VARCHAR})
+	  </foreach>	
+  </insert>
+  <!-- 中粮的商品id被我放进了海商的ProductCode字段中 -->
+  <select id="getProductIdInHiShopUseGoodsId" parameterType="java.lang.String" resultType="java.lang.String">
+   		select ProductId from Hishop_Products where ProductCode=#{goodsId}
+  </select>
+  <!-- 往商品规格表插入一条数据 -->
+<insert id="insertHishop_SKUs2"  parameterType="hanhan.entity.shangPinGuiGeXiangXiBiao.Hishop_SKUs">
+	  	insert into Hishop_SKUs values
+	  	(
+	  	#{SkuId,jdbcType=VARCHAR},#{ProductId,jdbcType=INTEGER},#{SKU,jdbcType=VARCHAR}
+	  	,#{Weight,jdbcType=DECIMAL},#{Stock,jdbcType=INTEGER},#{WarningStock,jdbcType=INTEGER}
+	  	,#{CostPrice,jdbcType=DECIMAL},#{SalePrice,jdbcType=DECIMAL},#{FreezeStock,jdbcType=INTEGER}
+	  	)
+  </insert>
+  <update id="updateHishop_SKUs" parameterType="hanhan.entity.shangPinGuiGeXiangXiBiao.Hishop_SKUs">
+  		update Hishop_SKUs set Weight=(#{Weight,jdbcType=DECIMAL})
+  		,CostPrice=(#{CostPrice,jdbcType=DECIMAL})
+  		,SalePrice=(#{SalePrice,jdbcType=DECIMAL})
+  		where SkuId=(#{SkuId})
+  </update>
+  <!-- 插入一组数据 -->
+  <insert id="insertHishop_SKUs1"  parameterType="List">
+	  <foreach collection="list" item="item">
+	  	insert into Hishop_SKUs values
+	  	(
+	  	#{item.SkuId,jdbcType=VARCHAR},#{item.ProductId,jdbcType=INTEGER},#{item.SKU,jdbcType=VARCHAR}
+	  	,#{item.Weight,jdbcType=INTEGER},#{item.Stock,jdbcType=INTEGER},#{item.WarningStock,jdbcType=INTEGER}
+	  	,#{item.CostPrice,jdbcType=DECIMAL},#{item.SalePrice,jdbcType=DECIMAL},#{item.FreezeStock,jdbcType=INTEGER}
+	  	)
+	  </foreach>	
+  </insert>  
+   <!-- 判断商品规格表中是否已存在该数据 -->
+  <select id="isHishop_SKUsExsit" parameterType="hanhan.entity.shangPinGuiGeXiangXiBiao.Hishop_SKUs" resultType="INTEGER">
+   		select count(SkuId) from Hishop_SKUs where SkuId=#{SkuId,jdbcType=VARCHAR}
+  </select>
+  <!-- 在商品规格详细表中,通过传入一个ProductId来找到Skuid -->
+  <resultMap id="Hishop_SKUs002" type="hanhan.entity.shangPinGuiGeXiangXiBiao.Hishop_SKUs">
+  	<result column="SkuId" jdbcType="VARCHAR" property="SkuId" />
+  </resultMap>
+  <select id="getSkuidByProductIdInHishop_SKUs" parameterType="INTEGER" resultMap="Hishop_SKUs002">
+  	select SkuId from Hishop_SKUs where ProductId=#{ProductId}
+  </select>
+  <!-- 查询商品规格表的总记录数 -->
+  <select id="getAllRecordCountOfHishop_SKUs" resultType="INTEGER">
+  	select count(ProductId) from Hishop_SKUs
+  </select>
+  
+  <!-- 得到当前页的hishop_skus商品规格记录//分页工具pageBean里面默认每页5000条-->
+   <select id="getCurrentPageRecord" resultType="hanhan.entity.shangPinGuiGeXiangXiBiao.Hishop_SKUs">
+  			 select top(#{perPageRecord}) ProductId from Hishop_SKUs where ProductId not in(
+  			 	select top(#{beforeCurrentPageTotalRecord}) ProductId from Hishop_SKUs ORDER BY ProductId
+  			 )ORDER BY ProductId
+  </select>
+  <!--  向商品规格详细表中插入库存,这个库存来自相同productID的门店库存的叠加 -->
+   <update id="updateHishop_SKUsStock">
+	   update Hishop_SKUs set CostPrice=#{CostPrice}, SalePrice=#{SalePrice} where SkuId=#{SkuId};
+  </update>
+  
+  
+  
+  
+  
+  <!-- 插入区域仓库以及商品id以及库存数量对照表 -->
+   <insert id="insertToInventory_area_Tab"  parameterType="hanhan.entity.goodsEntity.suoYouShangPinZai31GeQuYuDeFenBieKuCun.ProductAreaInventory">
+	  	insert into Inventory_area_Tab(areaID,areaName,areaInventory,productID)values(#{areaID},#{areaName},#{areaInventory},#{productID});
+  </insert>  
+  
+  <!-- 得到所有门店信息,注意要映射nvarchar等不常见字符集 -->
+   <resultMap id="Hishop_Stores001" type="hanhan.entity.MenDianTabEntity.Hishop_Stores">
+  	<result column="StoreName" jdbcType="VARCHAR" property="StoreName" />
+  	<result column="Address" jdbcType="VARCHAR" property="Address" />
+  	<result column="ContactMan" jdbcType="VARCHAR" property="ContactMan" />
+  	<result column="Tel" jdbcType="VARCHAR" property="Tel" />
+  	<result column="CloseStatus" jdbcType="BIT" property="CloseStatus" />
+  	<result column="WxAddress" jdbcType="VARCHAR" property="WxAddress" />
+  	<result column="Longitude" jdbcType="DOUBLE" property="Longitude" />
+  	<result column="Latitude" jdbcType="DOUBLE" property="Latitude" />
+  	<result column="WXBusinessName" jdbcType="VARCHAR" property="WXBusinessName" />
+  	<result column="WXBranchName" jdbcType="VARCHAR" property="WXBranchName" />
+  	<result column="WXCategoryName" jdbcType="VARCHAR" property="WXCategoryName" />
+  	<result column="StoreImages" jdbcType="VARCHAR" property="StoreImages" />
+  	<result column="WXTelephone" jdbcType="VARCHAR" property="WXTelephone" />
+  	<result column="WXOpenTime" jdbcType="VARCHAR" property="WXOpenTime" />
+  	<result column="WXRecommend" jdbcType="VARCHAR" property="WXRecommend" />
+  	<result column="WXSpecial" jdbcType="VARCHAR" property="WXSpecial" />
+  	<result column="WXIntroduction" jdbcType="VARCHAR" property="WXIntroduction" />
+  	<result column="WXSId" jdbcType="VARCHAR" property="WXSId" />
+  	<result column="WXPoiId" jdbcType="BIGINT" property="WXPoiId" />
+  	<result column="WXOpenId" jdbcType="VARCHAR" property="WXOpenId" />
+  </resultMap>
+  <select id="getAllHishop_Stores" resultMap="Hishop_Stores001">
+  	select*from Hishop_Stores
+  </select>
+  <!-- 往门店里面库存表插入库存数据 -->
+  <insert id="insertHishop_StoreStock" parameterType="hanhan.entity.MenDianTabEntity.Hishop_StoreStock">
+  	insert into Hishop_StoreStock(
+  		StoreId,ProductID,SkuId,Stock
+  	)values(
+  		#{StoreId},#{ProductID},#{SkuId,jdbcType=VARCHAR},#{Stock}
+  	);
+ </insert>
+  <!-- 判断Hishop_StoreStock中是否已经存在该条数据,注意,只通过StoreId和ProductId来判断 -->
+  <select id="ifExsitHishop_StoreStock" parameterType="hanhan.entity.MenDianTabEntity.Hishop_StoreStock" resultType="INTEGER">
+  			select count(StoreId) from Hishop_StoreStock where StoreId=#{StoreId} and ProductID=#{ProductID}
+  </select>
+  <!-- 通过 StoreId和ProductId来更新这条数据-->
+  <update id="updateHishop_StoreStock" parameterType="hanhan.entity.MenDianTabEntity.Hishop_StoreStock">
+  		UPDATE Hishop_StoreStock set Stock=#{Stock} where StoreId=#{StoreId} and ProductID=#{ProductID}
+  </update>
+  <!-- //通过传入的productID在Hishop_StoreStock门店库存中叠加具有相同productID的库存 -->
+   <select id="addAllStockWhereHaveSameProductID" parameterType="INTEGER" resultType="INTEGER">
+  		select sum(Stock) from Hishop_StoreStock where ProductID=#{productID}
+  </select>
+  
+  
+  
+  
+  
+  
+  
+  <!-- 得到所有商品的productID,从海商商品表拿到 ,注意需要那个字段映射那个字段-->
+  <resultMap id="product001" type="hanhan.entity.goodsEntity.Hishop_Products.Hishop_Products">
+    <result column="ProductId" jdbcType="INTEGER" property="ProductId" />
+    <result column="ProductName" jdbcType="VARCHAR" property="ProductName" />
+  </resultMap>
+  <select id="getAllProductIdAndProductName" resultMap="product001">
+  	select ProductId,ProductName from Hishop_Products
+  </select>
+    <!-- getSomeProductIdAndProductName从海商商品库得到若干条记录 -->
+    <select id="getSomeProductIdAndProductName" parameterType="INTEGER" resultMap="product001">
+   		select top(#{perPageNum}) ProductId,ProductName from Hishop_Products where ProductId not in(
+   			select top((#{perPageNum})*(#{currP}-1)) ProductId from Hishop_Products ORDER BY ProductId
+   		)ORDER BY ProductId
+  </select>
+  <!-- getAllCountOfHishop_Products( )统计海商商品库的所有记录数目 -->
+   <select id="getAllCountOfHishop_Products" resultType="INTEGER">
+  	select count(ProductId) from Hishop_Products
+  </select>
+  
+  
+  <!-- 下面是同步物流状态的,主要是把海商订单表中的已付款同步成已发货状态 -->
+  <!-- 查询订单表的总数量 -->
+   <select id="chaXunDingDanBiaoZongShuLiang" resultType="INTEGER">
+  	select count(OrderId) from Hishop_Orders
+  </select>
+   <!-- 查询所有已付款订单总数量 -->
+   <select id="chaXunSuoYouYiFuKuanDingDanZongShuLiang" parameterType="INTEGER" resultType="INTEGER">
+  	select count(OrderId) from Hishop_Orders where OrderStatus=(#{OrderStatus2})
+  </select>
+  <!-- 查找当前页的所有 OrderId,zhaoChuDangQianYeDeOrderIdList,不用默认的预编译模式-->
+  <resultMap type="java.util.Map" id="baseMap01">
+  		 <result property="OrderId" column="OrderId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+  </resultMap>
+  <select id="zhaoChuDangQianYeDeOrderIdMapList" resultMap="baseMap01">
+	  	select top(#{meiYeXianShiShu}) OrderId from Hishop_Orders where OrderId not in(
+	  		select top((#{meiYeXianShiShu})*((#{dangQianYe})-1)) OrderId from Hishop_Orders ORDER BY OrderId
+	  	)
+	  	and OrderStatus=(#{OrderStatus2}) ORDER BY OrderId
+  </select>
+  <!-- 更新订单状态从已经付款到已经发货,1,等待付款,2,已付款,3,已发货 -->
+	<select id="gengXinDingDanZhuangTaiCongYiFuKuanDaoYiFaHuo">
+		update Hishop_Orders set OrderStatus=3 where OrderId=(#{OrderId,jdbcType=VARCHAR});
+	</select>
+ <!-- 选择最早一条进入数据库的物流状态为2(已付款)的数据记录 -->
+ <select id="xuanZeZuiZaoYiTiaoBingQieZhuangTaiMaShi2DeDingDanJiLu" resultMap="baseMap01">
+		select top(1) OrderId from Hishop_Orders where OrderStatus=2 order by UpdateDate asc
+ </select>
+ 
+ 
+ 
+ 
+</mapper>

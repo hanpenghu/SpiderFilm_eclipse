@@ -1,0 +1,10 @@
+同步中粮给的Excel(商品分类表)到海商商品分类表Hishop_Categories
+(这个方式“没有使用批处理”,是因为需要过滤数据库中是否已经有该条记录)
+使用了testReadExcel包里面的JDBC.properties和zhongLiangFenLei.xls
+
+
+
+
+注意,使用这个类会导致主键冲突,在导入数据库分类表的时候
+这是因为表中已经存在分类了
+建议使用下面一个分类

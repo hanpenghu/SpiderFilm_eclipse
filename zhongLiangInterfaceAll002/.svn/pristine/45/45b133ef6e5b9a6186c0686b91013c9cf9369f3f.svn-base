@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util" 
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context.xsd 
+	http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd 
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx.xsd 
+	http://www.springframework.org/schema/jdbc 
+	http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd 
+	http://www.springframework.org/schema/cache 
+	http://www.springframework.org/schema/cache/spring-cache-3.1.xsd 
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	 http://www.springframework.org/schema/util 
+	 http://www.springframework.org/schema/util/spring-util.xsd
+	http://www.springframework.org/schema/task 
+	 http://www.springframework.org/schema/task/spring-task-3.0.xsd"
+	default-lazy-init="true"><!-- 不适用懒加载 -->
+
+	<!-- config of c3p0  -->
+	<!--config properties file of c3p0 --><!-- /zhongLiangInterfaceAll/src/hanhan/zhongLiangTongBuKuKuangJia/xml/b004C3P0/manJDBC.properties -->
+    <context:property-placeholder location="classpath:hanhan/zhongLiangTongBuKuKuangJia/xml/b004C3P0/manJDBC.properties" />
+    <!-- config c3p0 dataSource -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <!-- base information-->
+        <property name="jdbcUrl" value="${c3p0.url}"></property>
+        <property name="driverClass" value="${c3p0.driverClassName}"></property>
+        <property name="user" value="${c3p0.username}"></property>
+        <property name="password" value="${c3p0.password}"></property>
+        <!-- other config-->
+        <!--acquire 3 connect when　it　Init，value must be between minPoolSize and maxPoolSize!Default: 3 -->
+        <property name="initialPoolSize" value="3"></property>
+        <!--the min connect in the dataSource。Default: 3 -->
+        <property name="minPoolSize" value="3"></property>
+        <!--the max connect in the dataSource。Default: 15 -->
+        <property name="maxPoolSize" value="5"></property>
+        <!--when datasource have nothing ,while it will get the specified count connect once。Default: 3 -->
+        <property name="acquireIncrement" value="3"></property>
+        <!-- control the datasource load the PreparedStatements's count。if maxStatements and maxStatementsPerConnection value is 0，the cache will be closed。Default: 0 -->
+        <property name="maxStatements" value="8"></property>
+        <!-- maxStatementsPerConnection defined  the dataSource's single connects's max statements count in the cache。Default: 0 -->
+        <property name="maxStatementsPerConnection" value="5"></property>
+        <!--max idle time,if never used in 1800 seconds,all the connect will be break。if the value is zero ,it will never be abandoned。Default: 0 -->
+        <property name="maxIdleTime" value="1800"></property>
+    </bean>
+    
+    
+<!--================================================================================================================-->
+
+<context:annotation-config/> 
+<task:executor id="executor" pool-size="5" />  
+<task:scheduler id="scheduler" pool-size="10" />  
+<task:annotation-driven executor="executor" scheduler="scheduler" />
+<context:component-scan base-package="hanhan.zhongLiangTongBuKuKuangJia.a003mybatisAndSpringTest001">
+ <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />	
+</context:component-scan><!-- 使用注解扫描 -->
+<!--开启这个配置，spring才能识别@Scheduled注解  以便使用注解进行定时任务-->  
+  
+	<!--  
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="com.mysql.jdbc.Driver"></property>
+		<property name="jdbcUrl" value="jdbc:mysql://127.0.0.1:3306/myBatisTest001?characterEncoding=utf8"></property>
+		<property name="user" value="root"></property>
+		<property name="password" value="root"></property>
+	</bean>
+	-->
+<!--================================================================================================================-->  
+	<!-- mybatis file config,scan all mapper file -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<!--notice-->
+		<property name="configLocation" value="classpath:hanhan/zhongLiangTongBuKuKuangJia/xml/b002mybatisHeadquartersXml/mybatis-sqlMap.xml"></property>
+		<!-- when mybatis headquarters hava config　a mapper,here can not write like following,else config here-->
+		<property name="mapperLocations" value="classpath:hanhan/zhongLiangTongBuKuKuangJia/xml/b001mybatisMapperXml/*.xml"/>
+	</bean>
+	 
+<!--================================================================================================================-->
+	<!--because we have no implement for interface ,so　we have this config to get a object of the interface to get her method for use-->
+	<!--scann interface by manual   ICRUDmanDB mapperOfCRUDmanDB = (ICRUDmanDB) ctx.getBean("ManMapper");-->
+	<!--
+	<bean id="ManMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface"
+			value="mybatisAndSpringTest001.a002IterfacMapper.ICRUDmanDB" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean> 
+	-->
+	<!--auto scann interface to implement   java code use  "ICRUDmanDB mapperOfCRUDmanDB =ctx.getBean(ICRUDmanDB.class)"-->
+	<!-- use to many interface, this can not include  <property name="sqlSessionFactory" ref="sqlSessionFactory" />-->
+	<!-- 65line -->
+	<!-- scann all　mybatis mapper to implements -->
+	<!--  
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+  		<property name="basePackage" value="mybatisAndSpringTest001.a002IterfacMapper"/>
+	</bean>
+	-->
+	<!-- 71line-->
+	<!--70 line-->
+	<!--if we　use 70-75 line and 75-80line , we must not use autowire in javacode but use setter to replace,if we use 65-71 and 75-81,we can use autowire in java code  -->
+	<!-- this is the way to change the interface to a implements of mybatis have no implements but only interface -->
+	<!-- <bean id="iCRUDmanDB" class="org.mybatis.spring.mapper.MapperFactoryBean">
+	  <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	  <property name="mapperInterface" value="hanhan.zhongLiangTongBuKuKuangJia.a002IterfacMapper.ICRUDmanDB"/>
+	</bean> -->
+	<!-- 扫描多个接口分业务用！ -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">  
+  		<property name="basePackage" value="hanhan.zhongLiangTongBuKuKuangJia.a002IterfacMapper" />  
+	</bean>
+	<!--in this config the name sqlSessionFactory and mapperInterface is　fixed ,can not change,but in other config may can be change-->
+	<!--75 line-->
+<!-- ==============================================-->
+<!-- <bean id="springContextHolder" class="hanhan.utilsOfMd5_32AndPostAPI.springContextUtiils.SpringContextHolder" lazy-init="false"/> -->
+<!--================================================================================================================-->
+	<!-- just now ,i know that ,if we want use spring transaction,we must sign this bean in spring to use spring transaction -->
+	<!-- <bean id="mybatisSpringTest001" class="hanhan.zhongLiangTongBuKuKuangJia.a003mybatisAndSpringTest001.mybatisSpringTest001"
+		  scope="singleton">
+		  <property name="iCRUDmanDB" ref="iCRUDmanDB"/>
+	</bean> -->
+	<!--81 line-->
+	<!-- scope default is singleton ,the mean is bean create once but use repeatedly
+		在一个bean的配置里面可以指定一个属性Scope，也就是bean的范围，bean的生命周期。
+		Scope可取的值5种：singleton（默认）、prototype、request、session、global session
+		其中最常用的就是：singleton和prototype，其他的三个是和web相关的，很少使用。
+		singleton：也就是单例模式。表示这个bean是单例模式，每次获取都是同一个bean
+		prototype：多例模式，也就是每次获取的都是一个新对象，使用场景：在action上需要设置为prototype
+	 -->
+	 <!-- 使用springUtil在任意地方得到一个IOC容器的类对象 -->
+<!--================================================================================================================-->
+    <!--start a transaction to　the method-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+    <!--we must choose the way between the xml config  and the annotation config -->
+	<!-- 
+	<tx:advice id="txadvice007" transaction-manager="transactionManager">
+	    <tx:attributes>
+	        <tx:method name="del*" propagation="REQUIRED" rollback-for="Exception"/>
+	        <tx:method name="f2" propagation="REQUIRED" rollback-for="Exception"/>
+	        <tx:method name="*" propagation="REQUIRED" read-only="true"/>
+	    </tx:attributes>
+	</tx:advice>
+	<aop:config>
+		<aop:advisor advice-ref="txadvice007" pointcut="execution(* mybatisAndSpringTest001.a003mybatisAndSpringTest001.*.*(..))"/>
+	</aop:config> 
+	-->
+	<!-- use annotation way to start a transaction ,we must choose the way between the xml config  and the annotation config -->  
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <!--配置CXF扫描，并制定包目录  -->
+  <!--  <import resource="classpath:hanhan/zhongLiangTongBuKuKuangJia/xml/b003SpringXml/cxf.xml"/> -->
+<!--================================================================================================================-->
+</beans>
+<!--================================================================================================================-->

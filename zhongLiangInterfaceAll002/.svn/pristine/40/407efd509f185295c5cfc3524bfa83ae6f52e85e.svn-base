@@ -1,0 +1,77 @@
+package hanhan.entity.shangPinGuiGeXiangXiBiao;
+import java.math.BigDecimal;
+public class Hishop_SKUs {
+	public Hishop_SKUs() {}
+	String SkuId="doItForYourSelf";//Nvarchar(100)来自商品规格表	规格编号
+	int ProductId=1;//66	98 Int来自商品表	商品编号
+	String SKU="doItForYourSelf";//Nvarchar(50)	货号
+	int Weight=1;//Int	重量
+	int Stock=99999	;//Int	库存
+	int WarningStock=1;//	Int	警告库存
+	BigDecimal CostPrice=new BigDecimal(1)	;//Money	成本价
+	BigDecimal SalePrice=new BigDecimal(1)	;//money	一口价
+	int FreezeStock	=1;//int	
+	public String getSkuId() {
+		return SkuId;
+	}
+	public void setSkuId(String skuId) {
+		SkuId = skuId;
+	}
+	public int getProductId() {
+		return ProductId;
+	}
+	public void setProductId(int productId) {
+		ProductId = productId;
+	}
+	public String getSKU() {
+		return SKU;
+	}
+	public void setSKU(String sKU) {
+		SKU = sKU;
+	}
+	public int getWeight() {
+		return Weight;
+	}
+	public void setWeight(int weight) {
+		Weight = weight;
+	}
+	public int getStock() {
+		return Stock;
+	}
+	public void setStock(int stock) {
+		Stock = stock;
+	}
+	public int getWarningStock() {
+		return WarningStock;
+	}
+	public void setWarningStock(int warningStock) {
+		WarningStock = warningStock;
+	}
+	public BigDecimal getCostPrice() {
+		return CostPrice;
+	}
+	public void setCostPrice(BigDecimal costPrice) {
+		CostPrice = costPrice;
+	}
+	public BigDecimal getSalePrice() {
+		return this.SalePrice;
+	}
+	public void setSalePrice(Double addPrice) {
+		this.SalePrice = CostPrice.add(new BigDecimal(addPrice));
+	}
+	public int getFreezeStock() {
+		return FreezeStock;
+	}
+	public void setFreezeStock(int freezeStock) {
+		FreezeStock = freezeStock;
+	}
+	@Override
+	public String toString() {
+		return "Hishop_SKUs [SkuId=" + SkuId + ", ProductId=" + ProductId + ", SKU=" + SKU + ", Weight=" + Weight
+				+ ", Stock=" + Stock + ", WarningStock=" + WarningStock + ", CostPrice=" + CostPrice + ", SalePrice="
+				+ SalePrice + ", FreezeStock=" + FreezeStock + "]";
+	}
+	
+
+
+}

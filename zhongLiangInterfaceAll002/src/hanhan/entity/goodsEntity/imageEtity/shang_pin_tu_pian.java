@@ -1,0 +1,90 @@
+package hanhan.entity.goodsEntity.imageEtity;
+
+public class shang_pin_tu_pian {
+	private String goodsid=null;
+	private String path1=null;
+	private String isprimary1=null;
+	private String path2=null;
+	private String isprimary2=null;
+	private String path3=null;
+	private String isprimary3=null;
+	private String path4=null;
+	private String isprimary4=null;
+	public shang_pin_tu_pian() {
+		// TODO Auto-generated constructor stub
+	}
+	public shang_pin_tu_pian(String goodsid, String path1, String isprimary1, String path2, String isprimary2,
+			String path3, String isprimary3, String path4, String isprimary4) {
+		super();
+		this.goodsid = goodsid;
+		this.path1 = path1;
+		this.isprimary1 = isprimary1;
+		this.path2 = path2;
+		this.isprimary2 = isprimary2;
+		this.path3 = path3;
+		this.isprimary3 = isprimary3;
+		this.path4 = path4;
+		this.isprimary4 = isprimary4;
+	}
+	public String getGoodsid() {
+		return goodsid;
+	}
+	public void setGoodsid(String goodsid) {
+		this.goodsid = goodsid;
+	}
+	public String getPath1() {
+		return path1;
+	}
+	public void setPath1(String path1) {
+		this.path1 = path1;
+	}
+	public String getIsprimary1() {
+		return isprimary1;
+	}
+	public void setIsprimary1(String isprimary1) {
+		this.isprimary1 = isprimary1;
+	}
+	public String getPath2() {
+		return path2;
+	}
+	public void setPath2(String path2) {
+		this.path2 = path2;
+	}
+	public String getIsprimary2() {
+		return isprimary2;
+	}
+	public void setIsprimary2(String isprimary2) {
+		this.isprimary2 = isprimary2;
+	}
+	public String getPath3() {
+		return path3;
+	}
+	public void setPath3(String path3) {
+		this.path3 = path3;
+	}
+	public String getIsprimary3() {
+		return isprimary3;
+	}
+	public void setIsprimary3(String isprimary3) {
+		this.isprimary3 = isprimary3;
+	}
+	public String getPath4() {
+		return path4;
+	}
+	public void setPath4(String path4) {
+		this.path4 = path4;
+	}
+	public String getIsprimary4() {
+		return isprimary4;
+	}
+	public void setIsprimary4(String isprimary4) {
+		this.isprimary4 = isprimary4;
+	}
+	@Override
+	public String toString() {
+		return "shang_pin_tu_pian [goodsid=" + goodsid + ", path1=" + path1 + ", isprimary1=" + isprimary1 + ", path2="
+				+ path2 + ", isprimary2=" + isprimary2 + ", path3=" + path3 + ", isprimary3=" + isprimary3 + ", path4="
+				+ path4 + ", isprimary4=" + isprimary4 + "]";
+	}
+
+}

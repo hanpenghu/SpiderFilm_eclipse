@@ -1,0 +1,9 @@
+
+一下是xfire需要的jar包
+xFireWebService_commons-logging.jar
+xFireWebService_jdom-1.0.jar
+xFireWebService_servlet-api-2.5.jar
+xFireWebService_spring-1.2.6.jar
+xFireWebService_wsdl4j-1.6.3.jar
+xFireWebService_xbean-spring-2.8.jar
+xFireWebService_xfire-all-1.2.6.jar
