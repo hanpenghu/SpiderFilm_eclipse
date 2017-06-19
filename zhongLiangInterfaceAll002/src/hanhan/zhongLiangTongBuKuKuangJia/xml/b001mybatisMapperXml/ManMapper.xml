@@ -450,6 +450,10 @@ SubMemberDeduct,SubReferralDeduct,ShippingTemplateId,SecondLevelDeduct,ThreeLeve
  </select>
  
  
+ <update id="doSelectCategoryHasChild">
+ 	UPDATE Hishop_Categories SET HasChildren = 1 WHERE CategoryId IN (SELECT CategoryId FROM Hishop_Categories a WHERE EXISTS (SELECT 1 FROM Hishop_Categories b WHERE b.ParentCategoryId = a.CategoryId))
+ </update>
+ 
  
  
 </mapper>

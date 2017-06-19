@@ -260,9 +260,9 @@ public class DoYuanFeng {
 	}
 
 	// ////////////////////////4,上下架信息临时库////////////////////////////////////////////////////
-	// @Scheduled(cron ="0 25 10 * * ?")
+//	@Scheduled(cron = "#{configProperties['syncTime']}")
 	public void f() {
-		System.out.println("执行----------!!!");
+		System.out.println("执行---------------------!!!");
 	}
 //商品上下架信息,接口支持批量查询//所以我就一次从接口拿出50个
 	public void tongBuShangPinShangXiaJia() {
@@ -1160,7 +1160,7 @@ public class DoYuanFeng {
 	
 	
 	// @Scheduled(fixedRate=2000)//第一次任务执行完后每隔2秒执行一次
-//	@Scheduled(cron = "0 50 18 * * ?")
+	@Scheduled(cron = "#{configProperties['syncTime']}")
 	// 在第一次任务执行后每天18点50运行一次//其实IOC容器加载的时候该任务就开始执行了
 	public void tongBuLinShiBiaoHeHaiShangShangPinKu() {
 		log.debug("--------同步商品开始----time=-"+(new Date( ))+"-！！！！！！！！！----------------------------------");
@@ -1188,25 +1188,28 @@ public class DoYuanFeng {
 		//syncShangPinGuiGeKuCun_UseMenDianKuCun();
 		//关联商品和分类表,这个其实可以不要了,主要是作为保险用,因为前面已经在插入商品的时候做掉了
 		associateCategoryAndProduct( );
+		//2017_6_19   weekday(1)   12:34:56  add function that: Category tab can select category in background console
+		iCRUDmanDB.doSelectCategoryHasChild();
 		long time2 = new Date().getTime();
 		log.debug("-------------------"+(time2 - time1) / 1000 + "秒----------合计小时数--"+(time2 - time1) / 1000/3600+"小时---------------------");
 		log.debug("-------"+(new Date( ))+"----------海商商品临时库和规格表同步结束！---------------------");
 	}
 
+	
 	// ////////////////////////////////////////////////////////////////////////////
 	//
 	// ////////////////////////////////////////////////////////////////////////////
 
 	// ////////////////////////////////////////////////////////////////////////////
-	public static void main(String[] args) {
+/*	public static void main(String[] args) {
 		String[] configs = {"classpath*:hanhan/zhongLiangTongBuKuKuangJia/xml/b003SpringXml/spring.xml"};
 		ApplicationContext ctx = new ClassPathXmlApplicationContext(configs);
 		DoYuanFeng doYuanFeng = (DoYuanFeng) ctx.getBean("doYuanFeng");
-		// doYuanFeng.f();
-		doYuanFeng.tongBuLinShiBiaoHeHaiShangShangPinKu();
+		 doYuanFeng.f();
+//		doYuanFeng.tongBuLinShiBiaoHeHaiShangShangPinKu();
 //		doYuanFeng.quYuCangKuDuiZhaoBiao();
 		System.out.println("================");
-	}
+	}*/
 	// ////////////////////////////////////////////////////////////////////////////
 }
 // ////////////////////////////////////////////////////////////////////////////

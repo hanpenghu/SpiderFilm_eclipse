@@ -174,6 +174,9 @@ public interface ICRUDmanDB {//这个是原来测试用的
 	public List<Map<String,String>> zhaoChuDangQianYeDeOrderIdMapList(@Param("meiYeXianShiShu")int meiYeXianShiShu,@Param("dangQianYe")int dangQianYe,@Param("OrderStatus2")int OrderStatus2);
 	public Integer gengXinDingDanZhuangTaiCongYiFuKuanDaoYiFaHuo(@Param("OrderId")String OrderId);
 	public Map<String,String> xuanZeZuiZaoYiTiaoBingQieZhuangTaiMaShi2DeDingDanJiLu( );
+
+	public Integer doSelectCategoryHasChild();
+	
 	
 //////////////////////////////////////////////////////////////////////////////                     
 }                                                                            

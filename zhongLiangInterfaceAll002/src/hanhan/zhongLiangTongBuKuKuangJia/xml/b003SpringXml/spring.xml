@@ -157,5 +157,34 @@
     <!--配置CXF扫描，并制定包目录  -->
   <!--  <import resource="classpath:hanhan/zhongLiangTongBuKuKuangJia/xml/b003SpringXml/cxf.xml"/> -->
 <!--================================================================================================================-->
+
+
+
+
+	<bean id="configProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="locations">
+            <list>
+                <value>classpath:hanhan/zhongLiangTongBuKuKuangJia/xml/b004C3P0/manJDBC.properties</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
+        <property name="properties" ref="configProperties" />
+    </bean>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </beans>
 <!--================================================================================================================-->

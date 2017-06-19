@@ -23,19 +23,19 @@ public class ZhongLiangTongBuWuLiuZhuangTaiDaoHaiShangDingDanBiao extends Abstra
 	public ZhongLiangTongBuWuLiuZhuangTaiDaoHaiShangDingDanBiao() {
 		super();
 	}
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		String[] configs = {"classpath*:hanhan/zhongLiangTongBuKuKuangJia/xml/b003SpringXml/spring.xml"};  
 		ApplicationContext ctx = new ClassPathXmlApplicationContext(configs);
 		ZhongLiangTongBuWuLiuZhuangTaiDaoHaiShangDingDanBiao syncLogistics=(ZhongLiangTongBuWuLiuZhuangTaiDaoHaiShangDingDanBiao)ctx.getBean("syncLogistics");
 		//syncLogistics.synchrnizeLogisticsShiYongFenYe( );
 		syncLogistics.synchrnizeLogisticsShiYongFenYe();
-	}
+	}*/
 //	 @Scheduled(cron ="0 50 18 * * ?")
 //	@Scheduled(initialDelay=360000000,fixedDelay=3600000)//shangYiCiJieShuHouTuiChiYiXiaoShiKaiShiXiaYiCi
 	//guDingMeiXiaoShiZhiXingYiCi
 //	 @Scheduled(initialDelay=360000000,fixedRate=3600000)//1xiaoShiZhiXingYiCi
 	@Scheduled(initialDelay=10000,fixedRate=7200000)
-	public void synchrnizeLogisticsShiYongFenYe( ){
+	public void synchrnizeLogisticsShiYongFenYe( ){// use this
 		 System.out.println("-----物流状态同步开始!!!---------");
 		try {
 			Integer yiFuKuanZongShuLiangYongLaiFenYe = iCRUDmanDB.chaXunSuoYouYiFuKuanDingDanZongShuLiang(OrderStatus2);
@@ -83,9 +83,9 @@ public class ZhongLiangTongBuWuLiuZhuangTaiDaoHaiShangDingDanBiao extends Abstra
 	//select top(1) OrderId from Hishop_Orders where OrderStatus=2 order by UpdateDate asc
 	//zhe zhong fang fa hui dao zhi: dang di yi tiao yi zhi mei you wu liu fa huo zhuang tai,zui hou yong yuan tui song de shi di yi tiao,qi ta ke hu de ji lu de bu dao tui song 
 //	@Scheduled(initialDelay=360000000,fixedRate=3600000)
-	//@Scheduled(initialDelay=20000,fixedRate=3600000)
-	public void tongBuWuLiuZhuangTaiBuShiYongFenYeMeiCiQuZuiZaoYiGe(){
-		System.out.println("---------------开始了！！！！-------------------------");
+//	@Scheduled(initialDelay=20000,fixedRate=3600000)
+	public void tongBuWuLiuZhuangTaiBuShiYongFenYeMeiCiQuZuiZaoYiGe(){//this no use,because it may have a mistake//2017_6_19   weekday(1)   14:09:19
+		System.out.println("---------------同步物流状态开始了！！！！-------------------------");
 		Integer yiFuKuanZongShuLiang = iCRUDmanDB.chaXunSuoYouYiFuKuanDingDanZongShuLiang(OrderStatus2);
 		System.out.println("yiFuKuanZongShuLiang="+yiFuKuanZongShuLiang);
 		if(yiFuKuanZongShuLiang!=0){
