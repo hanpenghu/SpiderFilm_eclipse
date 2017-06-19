@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.InvocationTargetException;
 
 /**
- * Created by Administrator on 2017/6/15.
+ * Created by hanhan on 2017/6/15.
  */
 @Component
 public class InsertCategoryDao {
@@ -35,9 +35,14 @@ public class InsertCategoryDao {
     /////////////////////////////////////////////////////////////////////////
     //存在(用guid判断)的时候启用update
     public void updateCategory(HishopCategories hc){
-        HishopCategoriesExample hce=new HishopCategoriesExample();
-        hce.createCriteria().andGuidEqualTo(hc.getGuid());
-        hishopCategoriesMapper.updateByExample(hc,hce);
+        try {
+			HishopCategoriesExample hce=new HishopCategoriesExample();
+			hce.createCriteria().andGuidEqualTo(hc.getGuid());
+			hishopCategoriesMapper.updateByExample(hc,hce);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			log.info("更新一条分类数据的时候出错！！！");
+		}
     }
 /////////////////////////////////////////////////////////////////////////
     public Boolean ifExsitByguid(HishopCategories hc){
